@@ -46,7 +46,7 @@ async function run() {
         const result = await cursor.toArray()
         res.send(result)
     })
-
+// single service get
     app.get("/services/:id", async (req, res) => {
       const id = req.params.id;
       const query = {
@@ -56,7 +56,64 @@ async function run() {
       console.log(result);
       res.send(result);
   });
-   
+  // update service get
+  app.get("/update/:id", async (req, res) => {
+    const id = req.params.id;
+    const query = {
+        _id: new ObjectId(id),
+    };
+    const result = await servicesCollection.findOne(query);
+    console.log(result);
+    res.send(result);
+});
+// put updated
+app.put("/update/:id", async (req, res) => {
+  const id = req.params.id;
+  const data = req.body;
+  console.log("id", id, data);
+  const filter = { _id: new ObjectId(id) };
+  const options = { upsert: true };
+  const updatedProduct = req.body;
+  const product = {
+      $set: {
+          userName: updatedProduct.userName,
+          userEmail: updatedProduct.userEmail,
+          ServiceName: updatedProduct.ServiceName,
+          price: updatedProduct.price,
+          servicesArea: updatedProduct.servicesArea,
+          serviceDescription: updatedProduct.serviceDescription,
+          image: updatedProduct.image
+      },
+  };
+
+const result = await  servicesCollection.updateOne(
+      filter,
+      product,
+      options
+  );
+  res.send(result);
+});
+
+
+// get delete service
+app.get("/delete/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = {
+      _id: new ObjectId(id),
+  };
+  const result = await servicesCollection.findOne(query);
+  console.log(result);
+  res.send(result);
+});
+
+// services delete
+app.delete('/delete/:id', async (req, res) => {
+  const id = req.params.id;
+  console.log('please delete', id)
+  const query = { _id:new ObjectId (id) };
+  const result = await servicesCollection.deleteOne(query);
+  res.send(result)
+})
 
 
 
