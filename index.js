@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const port = process.env.PORT || 5000;
 
@@ -32,9 +32,13 @@ async function run() {
     const servicesCollection = client.db('travelnest').collection('services')
 
      // post services 
-     app.post('/services',async(req ,res) =>{
-        
-     })
+     app.post("/services", async (req, res) => {
+        const services = req.body;
+          console.log(services);
+        const result = await servicesCollection.insertOne(services);
+        console.log(result);
+        res.send(result);
+      });
 
     // services get
     app.get('/services',async (req,res) =>{
@@ -42,6 +46,16 @@ async function run() {
         const result = await cursor.toArray()
         res.send(result)
     })
+
+    app.get("/services/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = {
+          _id: new ObjectId(id),
+      };
+      const result = await  servicesCollection.findOne(query);
+      console.log(result);
+      res.send(result);
+  });
    
 
 
