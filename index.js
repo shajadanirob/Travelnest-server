@@ -124,6 +124,16 @@ app.delete('/delete/:id', async (req, res) => {
   res.send(result)
 })
 
+// get bookings
+app.get('/bookings', async (req, res) => {
+  console.log(req.query.email);
+  let query = {};
+  if (req.query?.email) {
+      query = { userEmail: req.query.email }
+  }
+  const result = await bookingsCollection.find(query).toArray();
+  res.send(result);
+})
 
 
 // Post bookings
