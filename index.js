@@ -58,6 +58,13 @@ async function run() {
       res.send(result);
   });
 
+
+app.get('/service/:userEmail', async (req, res) => {
+  const userEmail = req.params.userEmail;
+  const query = { userEmail: userEmail }
+  const result = await servicesCollection.find(query).toArray();
+  res.send(result)
+})
  
 
 
@@ -134,6 +141,7 @@ app.get('/bookings', async (req, res) => {
   const result = await bookingsCollection.find(query).toArray();
   res.send(result);
 })
+
 
 
 // Post bookings
