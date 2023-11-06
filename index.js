@@ -143,9 +143,33 @@ app.get('/bookings', async (req, res) => {
 })
 
 
-
 // Post bookings
 app.post('/bookings', async (req, res) => {
+  const booking = req.body;
+  console.log(booking);
+  const result = await bookingsCollection.insertOne(booking);
+  res.send(result);
+});
+
+
+// get pendingWork
+app.get('/pendings', async (req, res) => {
+  console.log(req.query.email);
+  let query = {};
+  if (req.query?.email) {
+      query = { ServicesEmail: req.query.email }
+  }
+  const result = await bookingsCollection.find(query).toArray();
+  res.send(result);
+})
+
+
+
+
+
+
+// Post pendingWork
+app.post('/pendings', async (req, res) => {
   const booking = req.body;
   console.log(booking);
   const result = await bookingsCollection.insertOne(booking);
