@@ -30,6 +30,7 @@ async function run() {
     await client.connect();
 
     const servicesCollection = client.db('travelnest').collection('services')
+    const bookingsCollection = client.db('travelnest').collection('Bookings')
 
      // post services 
      app.post("/services", async (req, res) => {
@@ -56,6 +57,14 @@ async function run() {
       console.log(result);
       res.send(result);
   });
+
+ 
+
+
+
+
+
+
   // update service get
   app.get("/update/:id", async (req, res) => {
     const id = req.params.id;
@@ -117,7 +126,13 @@ app.delete('/delete/:id', async (req, res) => {
 
 
 
-
+// Post bookings
+app.post('/bookings', async (req, res) => {
+  const booking = req.body;
+  console.log(booking);
+  const result = await bookingsCollection.insertOne(booking);
+  res.send(result);
+});
 
 
 
