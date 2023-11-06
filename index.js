@@ -31,6 +31,7 @@ async function run() {
 
     const servicesCollection = client.db('travelnest').collection('services')
     const bookingsCollection = client.db('travelnest').collection('Bookings')
+    const pendingsCollection = client.db('travelnest').collection('pendings')
 
      // post services 
      app.post("/services", async (req, res) => {
@@ -133,7 +134,7 @@ app.delete('/delete/:id', async (req, res) => {
 
 // get bookings
 app.get('/bookings', async (req, res) => {
-  console.log(req.query.email);
+  // console.log(req.query.email);
   let query = {};
   if (req.query?.email) {
       query = { userEmail: req.query.email }
@@ -154,17 +155,14 @@ app.post('/bookings', async (req, res) => {
 
 // get pendingWork
 app.get('/pendings', async (req, res) => {
-  console.log(req.query.email);
+  // console.log(req.query.email);
   let query = {};
   if (req.query?.email) {
       query = { ServicesEmail: req.query.email }
   }
-  const result = await bookingsCollection.find(query).toArray();
+  const result = await pendingsCollection.find(query).toArray();
   res.send(result);
 })
-
-
-
 
 
 
@@ -172,7 +170,7 @@ app.get('/pendings', async (req, res) => {
 app.post('/pendings', async (req, res) => {
   const booking = req.body;
   console.log(booking);
-  const result = await bookingsCollection.insertOne(booking);
+  const result = await pendingsCollection.insertOne(booking);
   res.send(result);
 });
 
