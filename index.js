@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const port = process.env.PORT || 5000;
@@ -27,7 +29,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const servicesCollection = client.db('travelnest').collection('services')
     const bookingsCollection = client.db('travelnest').collection('Bookings')
@@ -144,6 +146,7 @@ app.get('/bookings', async (req, res) => {
 })
 
 
+
 // Post bookings
 app.post('/bookings', async (req, res) => {
   const booking = req.body;
@@ -164,6 +167,33 @@ app.get('/pendings', async (req, res) => {
   res.send(result);
 })
 
+// app.get("/pendings/:id", async (req, res) => {
+//   const id = req.params.id;
+//   const query = {
+//       _id: new ObjectId(id),
+//   };
+//   const result = await pendingsCollection.findOne(query);
+//   console.log(result);
+//   res.send(result);
+// });
+
+
+
+// pending fatch
+app.patch('/pendings/:id', async(req,res) =>{
+  const id = req.params.id
+   const filter = {_id : new ObjectId(id)}
+   const updatedBooking = req.body
+   console.log(updatedBooking)
+   const updateDoc = {
+     $set: {
+       status: updatedBooking.status
+     },
+   };
+ const result = await pendingsCollection.updateOne(filter,updateDoc)
+ res.send(result)
+ })
+
 
 
 // Post pendingWork
@@ -182,7 +212,7 @@ app.post('/pendings', async (req, res) => {
 
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
